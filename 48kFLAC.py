@@ -31,7 +31,7 @@ for root, _, files in os.walk(directory):
         errorfiles+=1
 print ("Existing playable files "+str(goodfiles))
 print ("Files converted "+str(badfiles))
-print ("Files with errors "+errorfiles);
+print ("Files with errors "+errorfiles)
 print ("Total FLAC files seen "+str(goodfiles+badfiles+errorfiles))
 
 
