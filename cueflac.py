@@ -16,8 +16,9 @@
 #along with this program. If not, see <https://www.gnu.org/licenses/>
 
 import os
-
+count =0
 directory = "e:\\audio\\"
+cuename=""
 for root, dirs, files in os.walk(directory):
 
     for dir in dirs:
@@ -30,9 +31,11 @@ for root, dirs, files in os.walk(directory):
                     flacfiles+=1
                 elif (file.endswith(".cue")):
                      cuefiles+=1
+                     cuename=os.path.join(root,dir,file)
             if (flacfiles<2) and (cuefiles>0):
-                print (path +" may contain a single flac + cue")
-
+                count+=1
+                print (cuename)
+print ("Potential CDs to split "+str(count))
 
 
 

@@ -33,15 +33,15 @@ for root, _, files in os.walk(directory):
                 path=os.path.join(root, file)
                 data, samplerate = sf.read(path)
                 if  (samplerate==44100) or (samplerate==48000) :
-                    print (".",end="")
+                    print (".",end="",flush=True)
                     goodfiles+=1
                 else:
                     print()
-                    print("Converting "+file+" from "+ str(samplerate))
+                    print("Converting "+file+" from "+ str(samplerate),flush=True)
                     samplePath=path+str(samplerate)
                     sh.copy(path, samplePath) #I want to leave the original untouched FLAC behind. Not going to clear up. 
                     ffmpegCommand = "c:\\ffmpeg\\bin\\ffmpeg -i \""+samplePath+ "\" -af aresample=out_sample_fmt=s16:out_sample_rate=48000 \""+path+"\" -y"
-                    print (ffmpegCommand)
+                    print (ffmpegCommand,flush=True)
                     os.system(ffmpegCommand)
                     badfiles+=1
     except:
