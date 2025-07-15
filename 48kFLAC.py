@@ -35,6 +35,14 @@ for root, _, files in os.walk(directory):
                 if  (samplerate==44100) or (samplerate==48000) :
                     print (".",end="",flush=True)
                     goodfiles+=1
+                    if (goodfiles%80==0):
+                        print("");
+                        print ("********* Progress *********")
+                        print ("Existing playable files "+str(goodfiles))
+                        print ("Files converted "+str(badfiles))
+                        print ("Files with errors "+str(errorfiles))
+                        print ("Total FLAC files seen "+str(goodfiles+badfiles+errorfiles))
+                        print ("****************************")
                 else:
                     print()
                     print("Converting "+file+" from "+ str(samplerate),flush=True)
