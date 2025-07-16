@@ -22,46 +22,61 @@ import soundfile as sf
 import shutil as sh
 
 goodfiles=0
+totalfiles=0
 badfiles=0
 errorfiles=0
 
 directory = 'e:\\audio\\'
+srcpath=''
+bProcessed = False
+dirdepth = 0 
 for root, _, files in os.walk(directory):
     try:
+        dirdepth+=1
+        srcpath=os.path.join(root, ".srconvert")
+        if os.path.exists(srcpath) :
+            bProcessed = True 
         for file in files:
+            
+            os.system('cls' if os.name == 'nt' else 'clear')
+            
             if (file.endswith(".flac")):
-        
-        
-                os.system('cls' if os.name == 'nt' else 'clear')
+                totalfiles+=1
                 print ("********* Progress *********")
+                print ("* Directories Processed :"+str(dirdepth))
+                if ( bProcessed == True ) :
+                    print ("* Already processed this directory - skipping sample rate check ")
+                else :
+                    print ("* Processing this directory as new")
                 print ("* Processing :"+file)
-                print ("* Existing playable files "+str(goodfiles))
+                print ("* Files examined in this run :"+str(goodfiles))
                 print ("* Files converted "+str(badfiles))
                 print ("* Files with errors "+str(errorfiles))
-                print ("* Total FLAC files seen "+str(goodfiles+badfiles+errorfiles))
+                print ("* Total FLAC files seen "+str(totalfiles))
                 print ("****************************")
-        
-                path=os.path.join(root, file)
-                data, samplerate = sf.read(path)
-                if  (samplerate==44100) or (samplerate==48000) :
 
-                    goodfiles+=1
-                    
-                else:
-                    print()
-                    print("Converting "+file+" from "+ str(samplerate),flush=True)
-                    samplePath=path+str(samplerate)
-                    sh.copy(path, samplePath) #I want to leave the original untouched FLAC behind. Not going to clear up. 
-                    ffmpegCommand = "c:\\ffmpeg\\bin\\ffmpeg -i \""+samplePath+ "\" -af aresample=out_sample_fmt=s16:out_sample_rate=48000 \""+path+"\" -y"
-                    print (ffmpegCommand,flush=True)
-                    os.system(ffmpegCommand)
-                    badfiles+=1
+                if ( bProcessed == False) :
+                    path=os.path.join(root, file)
+                    data, samplerate = sf.read(path)
+                    if  (samplerate==44100) or (samplerate==48000) :
+                        goodfiles+=1
+                        
+                    else :
+                        samplePath=path+str(samplerate)
+                        sh.copy(path, samplePath) #I want to leave the original untouched FLAC behind. Not going to clear up. 
+                        ffmpegCommand = "c:\\ffmpeg\\bin\\ffmpeg -i \""+samplePath+ "\" -af aresample=out_sample_fmt=s16:out_sample_rate=48000 \""+path+"\" -y"
+                        os.system(ffmpegCommand)
+                        badfiles+=1
+    #We have processed this directory. Drop an .srconvert file in it to speed up future processing. 
+        
     except:
         print ("Attempting to recover - processing next file")
         errorfiles+=1
-print ("Existing playable files "+str(goodfiles))
-print ("Files converted "+str(badfiles))
-print ("Files with errors "+str(errorfiles))
-print ("Total FLAC files seen "+str(goodfiles+badfiles+errorfiles))
+    finally:
+        if ( bProcessed == False) :
+            with open(srcpath, "w") as file:
+                file.write("Hello, this is a simple text file!")
+        bProcessed = False
+
 
 
