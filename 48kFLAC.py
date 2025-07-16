@@ -20,6 +20,10 @@ import os
 import numpy as np
 import soundfile as sf
 import shutil as sh
+from rich.console import Console
+console = Console()
+
+console.clear()
 
 goodfiles=0
 totalfiles=0
@@ -30,6 +34,7 @@ directory = 'e:\\audio\\'
 srcpath=''
 bProcessed = False
 dirdepth = 0 
+console.clear()
 for root, _, files in os.walk(directory):
     try:
         dirdepth+=1
@@ -38,22 +43,22 @@ for root, _, files in os.walk(directory):
             bProcessed = True 
         for file in files:
             
-            os.system('cls' if os.name == 'nt' else 'clear')
+            console.clear()
             
             if (file.endswith(".flac")):
                 totalfiles+=1
-                print ("********* Progress *********")
-                print ("* Directories Processed :"+str(dirdepth))
+                console.print ("********* Progress *********")
+                console.print ("* Directories Processed :"+str(dirdepth))
                 if ( bProcessed == True ) :
-                    print ("* Already processed this directory - skipping sample rate check ")
+                    console.print ("* Already processed this directory - skipping sample rate check ")
                 else :
-                    print ("* Processing this directory as new")
-                print ("* Processing :"+file)
-                print ("* Files examined in this run :"+str(goodfiles))
-                print ("* Files converted "+str(badfiles))
-                print ("* Files with errors "+str(errorfiles))
-                print ("* Total FLAC files seen "+str(totalfiles))
-                print ("****************************")
+                    console.print ("* Processing this directory as new")
+                console.print ("* Processing :"+file)
+                console.print ("* Files examined in this run :"+str(goodfiles))
+                console.print ("* Files converted "+str(badfiles))
+                console.print ("* Files with errors "+str(errorfiles))
+                console.print ("* Total FLAC files seen "+str(totalfiles))
+                console.print ("****************************")
 
                 if ( bProcessed == False) :
                     path=os.path.join(root, file)
@@ -70,7 +75,7 @@ for root, _, files in os.walk(directory):
     #We have processed this directory. Drop an .srconvert file in it to speed up future processing. 
         
     except:
-        print ("Attempting to recover - processing next file")
+        console.print ("Attempting to recover - processing next file")
         errorfiles+=1
     finally:
         if ( bProcessed == False) :
