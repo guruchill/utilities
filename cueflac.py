@@ -19,6 +19,8 @@ import os
 count =0
 directory = "e:\\audio\\"
 cuename=""
+move = False
+
 for root, dirs, files in os.walk(directory):
 
     for dir in dirs:
@@ -35,6 +37,10 @@ for root, dirs, files in os.walk(directory):
             if (flacfiles<2) and (cuefiles>0):
                 count+=1
                 print (cuename)
+                if ( move == True ):
+                    dirpath = os.path.join (root, dir)
+                    oscommand = "move \""+dirpath+"\" e:\\nonsplit\\"
+                    os.system(oscommand)
 print ("Potential CDs to split "+str(count))
 
 
