@@ -21,6 +21,11 @@ import numpy as np
 import soundfile as sf
 import shutil as sh
 from rich.console import Console
+import datetime
+import sys
+import requests
+
+
 console = Console()
 
 console.clear()
@@ -30,6 +35,7 @@ totalfiles=0
 badfiles=0
 errorfiles=0
 
+webhookurl = "https://discord.com/api/webhooks/1398363545258692749/oiuzAQkUu3fOcIQEnw-rCF8MNhzMrDoUHmng8_VuJGxSCYqgSy5KiZaTCFa2rOdtqtoK" 
 directory = 'e:\\audio\\'
 srcpath=''
 bProcessed = False
@@ -43,22 +49,22 @@ for root, _, files in os.walk(directory):
             bProcessed = True 
         for file in files:
             
-            console.clear()
+            #console.clear()
             
             if (file.endswith(".flac")):
                 totalfiles+=1
-                console.print ("********* Progress *********")
-                console.print ("* Directories Processed :"+str(dirdepth))
-                if ( bProcessed == True ) :
-                    console.print ("* Already processed this directory - skipping sample rate check ")
-                else :
-                    console.print ("* Processing this directory as new")
-                console.print ("* Processing :"+file)
-                console.print ("* Files examined in this run :"+str(goodfiles))
-                console.print ("* Files converted "+str(badfiles))
-                console.print ("* Files with errors "+str(errorfiles))
-                console.print ("* Total FLAC files seen "+str(totalfiles))
-                console.print ("****************************")
+                #console.print ("********* Progress *********")
+                #console.print ("* Directories Processed :"+str(dirdepth))
+                #if ( bProcessed == True ) :
+                #    console.print ("* Already processed this directory - skipping sample rate check ")
+                #else :
+                #    console.print ("* Processing this directory as new")
+                #console.print ("* Processing :"+file)
+                #console.print ("* Files examined in this run :"+str(goodfiles))
+                #console.print ("* Files converted "+str(badfiles))
+                #console.print ("* Files with errors "+str(errorfiles))
+                #console.print ("* Total FLAC files seen "+str(totalfiles))
+                #console.print ("****************************")
 
                 if ( bProcessed == False) :
                     path=os.path.join(root, file)
@@ -83,5 +89,45 @@ for root, _, files in os.walk(directory):
                 file.write("Hello, this is a simple text file!")
         bProcessed = False
 
+resultsfile = "e:\\audio\\results.txt"
+exists = False
+if (os.path.exists(resultsfile)):
+    exists=True
+hookResults=""
 
+#Write some statistics out. 
+with open (resultsfile,"a") as file:
+    current_time = str(datetime.datetime.now())
+    results=""
+    if (exists==False):
+        results  += "********************************************************************************\n"
+    results += "* Statistics generated at "+current_time+" \n"
+    argCount = len(sys.argv)
+    if ( argCount>1):
+        results+="* Started by completion of torrent : "+sys.argv[1]+"\n"
+    else:
+        results+="* Started manually\n"
+
+    results += "* Total number of directories : "+str(dirdepth)+"\n"
+    results += "* Total FLAC files seen :"+str(totalfiles)+"\n"
+    hookResults=results
+    results += "********************************************************************************\n"
+    file.write(results)
+
+
+
+
+data = {
+    "content" : hookResults,
+    "username" : "SampleRate FlacBot"
+}
+
+result = requests.post(webhookurl, json = data)
+
+try:
+    result.raise_for_status()
+except requests.exceptions.HTTPError as err:
+    print(err)
+else:
+    print(f"Payload delivered successfully, code {result.status_code}.")
 
