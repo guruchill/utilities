@@ -35,7 +35,7 @@ totalfiles=0
 badfiles=0
 errorfiles=0
 
-webhookurl = "https://discord.com/api/webhooks/1398363545258692749/oiuzAQkUu3fOcIQEnw-rCF8MNhzMrDoUHmng8_VuJGxSCYqgSy5KiZaTCFa2rOdtqtoK" 
+webhookurl = "https://discord.com/api/webhooks/1398395852753731644/tQ0172veDNUqjLnerQ3WYKxhKTmP1imuQvfnGD8A0Up6B3iJL4kHreXj74uejL87pX3v" 
 directory = 'e:\\audio\\'
 srcpath=''
 bProcessed = False

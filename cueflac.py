@@ -19,28 +19,29 @@ import os
 count =0
 directory = "e:\\audio\\"
 cuename=""
-move = False
+move = True
+with open("e:\\audio\\splt.txt","w") as outputfile:
+        
+    for root, dirs, files in os.walk(directory):
 
-for root, dirs, files in os.walk(directory):
-
-    for dir in dirs:
-            path=os.path.join(root, dir)
-            cuefiles=0
-            flacfiles=0
-            contents = os.listdir(path)
-            for file in contents:
-                if (file.endswith(".flac")):
-                    flacfiles+=1
-                elif (file.endswith(".cue")):
-                     cuefiles+=1
-                     cuename=os.path.join(root,dir,file)
-            if (flacfiles<2) and (cuefiles>0):
-                count+=1
-                print (cuename)
-                if ( move == True ):
-                    dirpath = os.path.join (root, dir)
-                    oscommand = "move \""+dirpath+"\" e:\\nonsplit\\"
-                    os.system(oscommand)
+        for dir in dirs:
+                path=os.path.join(root, dir)
+                cuefiles=0
+                flacfiles=0
+                contents = os.listdir(path)
+                for file in contents:
+                    if (file.endswith(".flac")):
+                        flacfiles+=1
+                    elif (file.endswith(".cue")):
+                        cuefiles+=1
+                        cuename=os.path.join(root,dir,file)
+                if (flacfiles<2) and (cuefiles>0):
+                    count+=1
+                    outputfile.writelines(cuename+"\n")
+                    if ( move == True ):
+                        dirpath = os.path.join (root, dir)
+                        oscommand = "move \""+dirpath+"\" e:\\nonsplit\\"
+                        os.system(oscommand)
 print ("Potential CDs to split "+str(count))
 
 
